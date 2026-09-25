@@ -1,0 +1,53 @@
+/**
+ * Copyright 2025-2026 Huawei Technologies Co., Ltd
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ==============================================================================
+ */
+
+syntax = "proto3";
+
+package heartbeat;
+
+message PeerLinkMetric {
+  int32 target_rank = 1;
+  string transport_mode = 2;
+  double bandwidth_bytes_per_s = 3;
+  double avg_latency_s = 4;
+  int32 inflight_forwards = 5;
+  double contention_factor = 6;
+  double inflight_bytes = 7;
+}
+
+message DataServerMetrics {
+  reserved 5, 7;
+  int32 num_workers = 1;
+  int32 active_tasks = 2;
+  int32 pending_tasks = 3;
+  double avg_task_latency_s = 4;
+  repeated PeerLinkMetric peer_links = 6;
+}
+
+message PingRequest {
+  string id = 1;
+  string ip = 2;
+  string port = 3;
+  int32 rank = 4;  // DataServer rank in the cluster (used during registration)
+  DataServerMetrics metrics = 5;
+}
+
+message PingResponse {
+  string id = 1;
+  string ip = 2;
+  string port = 3;
+}

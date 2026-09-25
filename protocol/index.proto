@@ -1,0 +1,52 @@
+/**
+ * Copyright 2025-2026 Huawei Technologies Co., Ltd
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ==============================================================================
+ */
+
+syntax = "proto3";
+
+package index;
+
+import "metadata.proto";
+
+// 1. client -> coordinator -> data_server
+message IndexRequest {
+  string client_id = 1;      // client uuid
+  repeated int64 index = 2;  // sample index
+  bool auto_collation = 3;   // whether to automatically collate the samples
+  metadata.TargetDataServerInfo target_dataserver = 4;  // target DataServer for cluster communication
+}
+
+// 2. data_server -> coordinator -> client
+// 3. client -> data_server
+message IndexResponse {
+  IndexRequest index_request = 1;  // client uuid and index
+  string data_server = 2;          // ip:port
+  string task_uuid = 3;            // opaque task id for cross-node forwarding lookup
+}
+
+// Message type for streaming data transfer
+enum DataMessageType {
+  HEADER = 0;    // First message: serialized structure + tensor metadata (small, ~KB)
+  TENSOR = 1;    // Subsequent messages: one complete tensor buffer each (large, ~MB)
+  SHM_META = 2;  // Same-node fast path: payload is pickle((shm_name, data_size))
+}
+
+// 4. data_server -> client
+message DataResponse {
+  IndexResponse index_response = 1;      // client uuid, index and data_server
+  bytes data_items = 2;                  // data items
+  DataMessageType message_type = 3;      // streaming message type (HEADER or TENSOR)
+}

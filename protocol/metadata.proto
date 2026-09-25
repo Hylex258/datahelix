@@ -1,0 +1,40 @@
+/**
+ * Copyright 2026 Huawei Technologies Co., Ltd
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ==============================================================================
+ */
+
+syntax = "proto3";
+
+package metadata;
+
+// Target DataServer information for cluster communication
+message TargetDataServerInfo {
+  int32 rank = 1;    // Rank of target DataServer in the cluster
+  string addr = 2;   // IP address of target DataServer
+  string port = 3;   // Port of target DataServer
+}
+
+// Metadata request for DataServer-to-DataServer communication
+message MetadataRequest {
+  string task_id = 1;      // Unique task identifier
+  bytes metadata = 2;      // Serialized metadata (structure + tensor_info)
+  int32 src_rank = 3;      // Source DataServer rank
+}
+
+// Metadata response
+message MetadataResponse {
+  bool success = 1;          // Whether metadata was received successfully
+  string error_message = 2;  // Error message if failed
+}
