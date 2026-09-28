@@ -6,11 +6,6 @@ not a runnable package or a reproduction artifact. It is intended to make the
 client / coordinator / DataServer split, scheduling inputs, and data-transfer
 contract inspectable without publishing the complete MindData repository.
 
-The original implementation remains in MindData. The files here were copied
-from its `exp_lyh` branch at commit `0e8091a85821`; selected files had no local
-modifications at the time of copying. Original file copyright notices are
-preserved. See [LICENSE](LICENSE). Publication under that license should still
-be checked against the rights and approval requirements of the copyright holder.
 
 ## Read first
 
